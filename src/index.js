@@ -74,7 +74,7 @@ const createPdf = (params) =>
 
 try {
   const pdfBuffer = createPdf({
-    placeholder: {
+        placeholder: {
       signatureLength: 260,
     },
     text: "This is a document",
