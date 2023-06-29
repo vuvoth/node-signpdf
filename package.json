@@ -1,10 +1,10 @@
 {
     "name": "node-signpdf",
     "version": "1.5.0",
-    "description": "Simple signing of PDFs in node.",
+    "description": "Simple signing of PDFs in node. Modified from vbuch/node-signpdf with pkcs1 schema",
     "repository": {
         "type": "git",
-        "url": "https://github.com/vbuch/node-signpdf"
+        "url": "https://github.com/vuvoth/node-signpdf"
     },
     "license": "MIT",
     "keywords": [
