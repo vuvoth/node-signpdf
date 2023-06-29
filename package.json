@@ -1,5 +1,5 @@
 {
-    "name": "node-signpdf",
+    "name": "node-signpdf-gen",
     "version": "1.5.0",
     "description": "Simple signing of PDFs in node. Modified from vbuch/node-signpdf with pkcs1 schema",
     "repository": {
