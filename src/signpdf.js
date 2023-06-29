@@ -85,12 +85,7 @@ export class SignPdf {
             options.asn1StrictParsing,
             options.passphrase
         );
-
-        // Extract safe bags by type.
-        // We will need all the certificates and the private key.
-        const certBags = p12.getBags({
-            bagType: forge.pki.oids.certBag,
-        })[forge.pki.oids.certBag];
+ 
         const keyBags = p12.getBags({
             bagType: forge.pki.oids.pkcs8ShroudedKeyBag,
         })[forge.pki.oids.pkcs8ShroudedKeyBag];
@@ -101,16 +96,16 @@ export class SignPdf {
 
         const pkcs1Signature = privateKey.sign(md);
 
-        const asn1 = forge.asn1;
+        const {asn1} = forge;
         const signAsn1 = asn1.create(
             asn1.Class.UNIVERSAL,
             asn1.Type.OCTETSTRING,
             false,
-            pkcs1Signature
+            pkcs1Signature,
         );
 
         // Check if the PDF has a good enough placeholder to fit the signature.
-        const raw = forge.asn1.toDer(signAsn1.toAsn1()).getBytes();
+        const raw = forge.asn1.toDer(signAsn1).getBytes();
         // placeholderLength represents the length of the HEXified symbols but we're
         // checking the actual lengths.
         if (raw.length * 2 > placeholderLength) {

@@ -1,9 +1,8 @@
+#!/usr/bin/env node
+
 import PDFDocument from "pdfkit";
 
-import {
-  SignPdf,
-  pdfkitAddPlaceholder,
-} from './signpdf'
+import { SignPdf, pdfkitAddPlaceholder } from "./signpdf";
 
 import fs from "node:fs";
 
@@ -72,29 +71,32 @@ const createPdf = (params) =>
     pdf.end();
   });
 
-try {
-  const pdfBuffer = createPdf({
-        placeholder: {
+function signPDF({ pdfPath, keyFilePath, passphrase = "password" }) {
+  createPdf({
+    placeholder: {
       signatureLength: 260,
     },
     text: "This is a document",
+  }).then((pdfBuffer) => {
+    console.log(pdfBuffer);
+    let signer = new SignPdf();
+    let key = fs.readFileSync(keyFilePath);
+    const signedPdf = signer.sign_pkcs1(pdfBuffer, key, { passphrase });
+    fs.writeFileSync(pdfPath, signedPdf);
   });
-
-  fs.writeFileSync("./signature-holder.pdf", pdfBuffer);
-  console.log(pdfBuffer);
-} catch (e) {
-  // Deal with the fact the chain failed
-  console.log(e);
 }
 
 try {
-  let key = fs.readFileSync("./keyStore.p12");
-  let pdf = fs.readFileSync("./signature-holder.pdf");
-  let signer = new SignPdf();
-  const signedPdf = signer.sign(pdf, key, { passphrase: "test" });
+  const pdfPath = process.argv[2];
+  const keyFilePath = process.argv[3];
+  const passphrase = process.argv[4] || undefined;
 
-  fs.writeFileSync("./signatured.pdf", signedPdf);
+  console.log(passphrase);
+  signPDF({
+    pdfPath,
+    keyFilePath, 
+    passphrase,
+  });
 } catch (e) {
-  // Deal with the fact the chain failed
   console.log(e);
 }

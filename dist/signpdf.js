@@ -104,13 +104,7 @@ class SignPdf {
 
     const p12Asn1 = _nodeForge.default.asn1.fromDer(forgeCert);
 
-    const p12 = _nodeForge.default.pkcs12.pkcs12FromAsn1(p12Asn1, options.asn1StrictParsing, options.passphrase); // Extract safe bags by type.
-    // We will need all the certificates and the private key.
-
-
-    const certBags = p12.getBags({
-      bagType: _nodeForge.default.pki.oids.certBag
-    })[_nodeForge.default.pki.oids.certBag];
+    const p12 = _nodeForge.default.pkcs12.pkcs12FromAsn1(p12Asn1, options.asn1StrictParsing, options.passphrase);
 
     const keyBags = p12.getBags({
       bagType: _nodeForge.default.pki.oids.pkcs8ShroudedKeyBag
@@ -122,10 +116,12 @@ class SignPdf {
 
     md.update(pdf.toString("binary"));
     const pkcs1Signature = privateKey.sign(md);
-    const asn1 = _nodeForge.default.asn1;
+    const {
+      asn1
+    } = _nodeForge.default;
     const signAsn1 = asn1.create(asn1.Class.UNIVERSAL, asn1.Type.OCTETSTRING, false, pkcs1Signature); // Check if the PDF has a good enough placeholder to fit the signature.
 
-    const raw = _nodeForge.default.asn1.toDer(signAsn1.toAsn1()).getBytes(); // placeholderLength represents the length of the HEXified symbols but we're
+    const raw = _nodeForge.default.asn1.toDer(signAsn1).getBytes(); // placeholderLength represents the length of the HEXified symbols but we're
     // checking the actual lengths.
 
 

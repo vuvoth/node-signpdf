@@ -22,7 +22,8 @@
         "pades",
         "digital signature"
     ],
-    "main": "dist/index.js",
+    "main": "dist/signpdf.js",
+    "bin": "dist/cli.js",
     "engines": {
         "node": ">=12"
     },
